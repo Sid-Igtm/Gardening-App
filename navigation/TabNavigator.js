@@ -4,8 +4,9 @@ import { createMaterialBottomTabNavigator } from "@react-navigation/material-bot
 import { RFValue } from "react-native-responsive-fontsize";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import Feed from "../screens/Feed";
-import CreateStory from "../screens/CreateStory";
 import firebase from "firebase";
+import Trees from "../screens/Trees";
+import Veg from "../screens/CreateStory";
 
 const Tab = createMaterialBottomTabNavigator();
 
@@ -22,9 +23,15 @@ export default class BottomTabNavigator extends Component {
     return <Feed setUpdateToFalse={this.removeUpdated} {...props} />;
   };
 
-  renderStory = props => {
-    return <CreateStory setUpdateToTrue={this.changeUpdated} {...props} />;
+  renderVeg = props => {
+    return <Veg setUpdateToFalse={this.removeUpdated} {...props} />;
   };
+
+  renderTrees = props => {
+    return <Trees setUpdateToFalse={this.removeUpdated} {...props} />;
+  };
+
+
 
   changeUpdated = () => {
     this.setState({ isUpdated: true });
@@ -57,10 +64,14 @@ export default class BottomTabNavigator extends Component {
         screenOptions={({ route }) => ({
           tabBarIcon: ({ focused, color, size }) => {
             let iconName;
-            if (route.name === "Feed") {
-              iconName = focused ? "home" : "home-outline";
-            } else if (route.name === "Create Story") {
-              iconName = focused ? "add-circle" : "add-circle-outline";
+            if (route.name === "plants") {
+              iconName = focused ? "flower" : "flower-outline";
+
+            } else if (route.name === "veg") {
+              iconName = focused ? "leaf" : "leaf-outline";
+            } else if(route.name === "trees") {
+              iconName = focused ? "globe" : "globe-outline";
+
             }
             return (
               <Ionicons
@@ -71,18 +82,26 @@ export default class BottomTabNavigator extends Component {
               />
             );
           }
-        })}
+          
+        }
+        )}
         activeColor={"#009900"}
         inactiveColor={"gray"}
       >
         <Tab.Screen
-          name="Feed"
+          name="plants"
           component={this.renderFeed}
-          options={{ unmountOnBlur: true }}
+          options={{ unmountOnBlur: true}}
         />
         <Tab.Screen
-          name="Create Story"
-          component={this.renderStory}
+          name="veg"
+          component={this.renderVeg}
+          options={{ unmountOnBlur: true }}
+        />
+
+        <Tab.Screen
+          name="trees"
+          component={this.renderTrees}
           options={{ unmountOnBlur: true }}
         />
 

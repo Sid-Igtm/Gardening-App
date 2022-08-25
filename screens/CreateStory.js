@@ -6,31 +6,29 @@ import {
   SafeAreaView,
   Platform,
   StatusBar,
-  Image,
-  ScrollView,
-  TextInput,
-  Dimensions,
-  Button,
-  Alert
+  Image
 } from "react-native";
-import DropDownPicker from "react-native-dropdown-picker";
 import { RFValue } from "react-native-responsive-fontsize";
+import StoryCard from "./StoryCard";
+
 import AppLoading from "expo-app-loading";
 import * as Font from "expo-font";
+import { FlatList } from "react-native-gesture-handler";
 import firebase from "firebase";
 
 let customFonts = {
-  "Roboto": require("../assets/fonts/Roboto-Regular.ttf")
+  "Bubblegum-Sans": require("../assets/fonts/BubblegumSans-Regular.ttf")
 };
 
-export default class CreateStory extends Component {
+let stories = require("./temp_stories.json");
+
+export default class Veg extends Component {
   constructor(props) {
     super(props);
     this.state = {
       fontsLoaded: false,
-      previewImage: "image_1",
       light_theme: true,
-      dropdownHeight: 40
+      stories: []
     };
   }
 
@@ -41,48 +39,34 @@ export default class CreateStory extends Component {
 
   componentDidMount() {
     this._loadFontsAsync();
+    this.fetchStories();
     this.fetchUser();
   }
 
-  async addStory() {
-    if (
-      this.state.title &&
-      this.state.description &&
-      this.state.story &&
-      this.state.moral
-    ) {
-      let storyData = {
-        preview_image: this.state.previewImage,
-        title: this.state.title,
-        description: this.state.description,
-        story: this.state.story,
-        moral: this.state.moral,
-        author: firebase.auth().currentUser.displayName,
-        created_on: new Date(),
-        author_uid: firebase.auth().currentUser.uid,
-        likes: 0
-      };
-      await firebase
-        .database()
-        .ref(
-          "/posts/" +
-            Math.random()
-              .toString(36)
-              .slice(2)
-        )
-        .set(storyData)
-        .then(function(snapshot) {});
-      this.props.setUpdateToTrue();
-      this.props.navigation.navigate("Feed");
-    } else {
-      Alert.alert(
-        "Error",
-        "All fields are required!",
-        [{ text: "OK", onPress: () => console.log("OK Pressed") }],
-        { cancelable: false }
+  fetchStories = () => {
+    firebase
+      .database()
+      .ref("/posts/")
+      .on(
+        "value",
+        snapshot => {
+          let stories = [];
+          if (snapshot.val()) {
+            Object.keys(snapshot.val()).forEach(function (key) {
+              stories.push({
+                key: key,
+                value: snapshot.val()[key]
+              });
+            });
+          }
+          this.setState({ stories: stories });
+          this.props.setUpdateToFalse();
+        },
+        function (errorObject) {
+          console.log("The read failed: " + errorObject.code);
+        }
       );
-    }
-  }
+  };
 
   fetchUser = () => {
     let theme;
@@ -95,17 +79,16 @@ export default class CreateStory extends Component {
       });
   };
 
+  renderItem = ({ item: story }) => {
+    return <StoryCard story={story} navigation={this.props.navigation} />;
+  };
+
+  keyExtractor = (item, index) => index.toString();
+
   render() {
     if (!this.state.fontsLoaded) {
       return <AppLoading />;
     } else {
-      let preview_images = {
-        image_1: require("../assets/story_image_1.png"),
-        image_2: require("../assets/story_image_2.png"),
-        image_3: require("../assets/story_image_3.png"),
-        image_4: require("../assets/story_image_4.png"),
-        image_5: require("../assets/story_image_5.png")
-      };
       return (
         <View
           style={
@@ -128,11 +111,32 @@ export default class CreateStory extends Component {
                     : styles.appTitleText
                 }
               >
-                Plants
+                Gardening App
               </Text>
             </View>
           </View>
-            <View style={{ flex: 0.08 }} />
+          {!this.state.stories[0] ? (
+            <View style={styles.noStories}>
+              <Text
+                style={
+                  this.state.light_theme
+                    ? styles.noStoriesTextLight
+                    : styles.noStoriesText
+                }
+              >
+                No Stories Available
+              </Text>
+            </View>
+          ) : (
+            <View style={styles.cardContainer}>
+              <FlatList
+                keyExtractor={this.keyExtractor}
+                data={this.state.stories}
+                renderItem={this.renderItem}
+              />
+            </View>
+          )}
+          <View style={{ flex: 0.08 }} />
         </View>
       );
     }
@@ -172,60 +176,28 @@ const styles = StyleSheet.create({
   appTitleText: {
     color: "white",
     fontSize: RFValue(28),
-    fontFamily: "Bubblegum-Sans"
+    fontFamily: "Roboto"
   },
   appTitleTextLight: {
     color: "black",
     fontSize: RFValue(28),
-    fontFamily: "Bubblegum-Sans"
+    fontFamily: "Roboto"
   },
-  fieldsContainer: {
+  cardContainer: {
     flex: 0.85
   },
-  previewImage: {
-    width: "93%",
-    height: RFValue(250),
-    alignSelf: "center",
-    borderRadius: RFValue(10),
-    marginVertical: RFValue(10),
-    resizeMode: "contain"
+  noStories: {
+    flex: 0.85,
+    justifyContent: "center",
+    alignItems: "center"
   },
-  inputFont: {
-    height: RFValue(40),
-    borderColor: "white",
-    borderWidth: RFValue(1),
-    borderRadius: RFValue(10),
-    paddingLeft: RFValue(10),
+  noStoriesTextLight: {
+    fontSize: RFValue(40),
+    fontFamily: "Roboto"
+  },
+  noStoriesText: {
     color: "white",
-    fontFamily: "Bubblegum-Sans"
-  },
-  inputFontLight: {
-    height: RFValue(40),
-    borderColor: "black",
-    borderWidth: RFValue(1),
-    borderRadius: RFValue(10),
-    paddingLeft: RFValue(10),
-    color: "black",
-    fontFamily: "Bubblegum-Sans"
-  },
-  dropdownLabel: {
-    color: "white",
-    fontFamily: "Bubblegum-Sans"
-  },
-  dropdownLabelLight: {
-    color: "black",
-    fontFamily: "Bubblegum-Sans"
-  },
-  inputFontExtra: {
-    marginTop: RFValue(15)
-  },
-  inputTextBig: {
-    textAlignVertical: "top",
-    padding: RFValue(5)
-  },
-  submitButton: {
-    marginTop: RFValue(20),
-    alignItems: "center",
-    justifyContent: "center"
+    fontSize: RFValue(40),
+    fontFamily: "Roboto"
   }
 });
