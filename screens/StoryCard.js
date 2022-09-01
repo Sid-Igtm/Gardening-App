@@ -26,10 +26,9 @@ export default class StoryCard extends Component {
     this.state = {
       fontsLoaded: false,
       light_theme: true,
-      story_id: this.props.story.key,
-      story_data: this.props.story.value,
-      is_liked: false,
-      likes: this.props.story.value.likes
+      plant_id: this.props.plant.id,
+      plant_data: this.props.plant.info,
+     
     };
   }
 
@@ -57,7 +56,7 @@ export default class StoryCard extends Component {
   };
 
   render() {
-    let story = this.state.story_data;
+    let plant = this.state.plant_data;
     if (!this.state.fontsLoaded) {
       return <AppLoading />;
     } else {
@@ -73,8 +72,8 @@ export default class StoryCard extends Component {
           style={styles.container}
           onPress={() =>
             this.props.navigation.navigate("StoryScreen", {
-              story: story,
-              story_id : this.state.story_id
+              plant: plant,
+              plant_id : this.state.plant_id
             })
           }
         >
@@ -100,7 +99,7 @@ export default class StoryCard extends Component {
                       : styles.storyTitleText
                   }
                 >
-                  {story.title}
+                  {plant.name}
                 </Text>
                 <Text
                   style={
@@ -109,7 +108,7 @@ export default class StoryCard extends Component {
                       : styles.storyAuthorText
                   }
                 >
-                  {story.author}
+                  {plant.sci_name}
                 </Text>
                 <Text
                   style={
@@ -118,36 +117,13 @@ export default class StoryCard extends Component {
                       : styles.descriptionText
                   }
                 >
-                  {this.props.story.description}
+                  {plant.description}
                 </Text>
               </View>
             </View>
 
             <View style={styles.actionContainer}>
-              <TouchableOpacity
-                style={
-                  this.state.is_liked
-                    ? styles.likeButtonLiked
-                    : styles.likeButtonDisliked
-                }
-                onPress={() => this.likeAction()}
-              >
-                <Ionicons
-                  name={"heart"}
-                  size={RFValue(30)}
-                  color={this.state.light_theme ? "black" : "white"}
-                />
-
-                <Text
-                  style={
-                    this.state.light_theme
-                      ? styles.likeTextLight
-                      : styles.likeText
-                  }
-                >
-                  {this.state.likes}
-                </Text>
-              </TouchableOpacity>
+             
             </View>
           </View>
         </TouchableOpacity>

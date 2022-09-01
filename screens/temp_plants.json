@@ -1,0 +1,21 @@
+[
+    {
+        "id" : 1,
+        "info" : {
+            "name" : "Rose",
+            "sci_name" : "rose scientific name",
+            "description" : "rose is a flowering plant"
+
+        }
+        
+    },
+    {
+        "id" : 2,
+        "info" : {
+            "name" : "Tulsi",
+            "sci_name" : "tulsi scientific name",
+            "description" : "tulsi is a herb"
+
+        }
+    }
+]

@@ -20,15 +20,14 @@ let customFonts = {
   "Bubblegum-Sans": require("../assets/fonts/BubblegumSans-Regular.ttf")
 };
 
-let stories = require("./temp_stories.json");
+let plants = require("./temp_plants.json");
 
 export default class Feed extends Component {
   constructor(props) {
     super(props);
     this.state = {
       fontsLoaded: false,
-      light_theme: true,
-      stories: []
+      light_theme: true
     };
   }
 
@@ -39,7 +38,7 @@ export default class Feed extends Component {
 
   componentDidMount() {
     this._loadFontsAsync();
-    this.fetchStories();
+    //this.fetchStories();
     this.fetchUser();
   }
 
@@ -79,8 +78,8 @@ export default class Feed extends Component {
       });
   };
 
-  renderItem = ({ item: story }) => {
-    return <StoryCard story={story} navigation={this.props.navigation} />;
+  renderItem = ({ item: plant }) => {
+    return <StoryCard plant={plant} navigation={this.props.navigation} />;
   };
 
   keyExtractor = (item, index) => index.toString();
@@ -115,7 +114,7 @@ export default class Feed extends Component {
               </Text>
             </View>
           </View>
-          {!this.state.stories[0] ? (
+          {!plants[0] ? (
             <View style={styles.noStories}>
               <Text
                 style={
@@ -124,14 +123,14 @@ export default class Feed extends Component {
                     : styles.noStoriesText
                 }
               >
-                No Stories Available
+                No Plants Available
               </Text>
             </View>
           ) : (
             <View style={styles.cardContainer}>
               <FlatList
                 keyExtractor={this.keyExtractor}
-                data={this.state.stories}
+                data={plants}
                 renderItem={this.renderItem}
               />
             </View>

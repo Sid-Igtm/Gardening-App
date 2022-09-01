@@ -32,7 +32,7 @@ export default class StoryScreen extends Component {
       speakerIcon: "volume-high-outline",
       light_theme: true,
       is_liked : false,
-      likes : this.props.route.params.story.likes
+      //likes : this.props.route.params.plant.likes
 
     };
   }
@@ -134,7 +134,7 @@ export default class StoryScreen extends Component {
                     : styles.appTitleText
                 }
               >
-                Storytelling App
+                Gardening App
               </Text>
             </View>
           </View>
@@ -159,7 +159,7 @@ export default class StoryScreen extends Component {
                         : styles.storyTitleText
                     }
                   >
-                    {this.props.route.params.story.title}
+                    {this.props.route.params.plant.name}
                   </Text>
                   <Text
                     style={
@@ -168,7 +168,7 @@ export default class StoryScreen extends Component {
                         : styles.storyAuthorText
                     }
                   >
-                    {this.props.route.params.story.author}
+                    {this.props.route.params.plant.sci_name}
                   </Text>
                   <Text
                     style={
@@ -177,17 +177,17 @@ export default class StoryScreen extends Component {
                         : styles.storyAuthorText
                     }
                   >
-                    {this.props.route.params.story.created_on}
+                    {this.props.route.params.plant.description}
                   </Text>
                 </View>
                 <View style={styles.iconContainer}>
                   <TouchableOpacity
                     onPress={() =>
                       this.initiateTTS(
-                        this.props.route.params.title,
-                        this.props.route.params.author,
-                        this.props.route.params.story,
-                        this.props.route.params.moral
+                        this.props.route.params.plant.name,
+                        this.props.route.params.plant.sci_name,
+                        this.props.route.params.plant.description
+                  
                       )
                     }
                   >
@@ -208,7 +208,7 @@ export default class StoryScreen extends Component {
                       : styles.storyText
                   }
                 >
-                  {this.props.route.params.story.story}
+                  {this.props.route.params.plant.description}
                 </Text>
                 <Text
                   style={
@@ -217,35 +217,12 @@ export default class StoryScreen extends Component {
                       : styles.moralText
                   }
                 >
-                  Moral - {this.props.route.params.story.moral}
+                  Description - {this.props.route.params.plant.description}
                 </Text>
               </View>
               <View style={styles.actionContainer}>
 
-              <TouchableOpacity
-                style={
-                  this.state.is_liked
-                    ? styles.likeButtonLiked
-                    : styles.likeButtonDisliked
-                }
-                onPress={() => this.likeAction()}
-              >
-                <Ionicons
-                  name={"heart"}
-                  size={RFValue(30)}
-                  color={this.state.light_theme ? "black" : "white"}
-                />
-
-                <Text
-                  style={
-                    this.state.light_theme
-                      ? styles.likeTextLight
-                      : styles.likeText
-                  }
-                >
-                  {this.state.likes}
-                </Text>
-              </TouchableOpacity>
+              
               </View>
             </ScrollView>
           </View>

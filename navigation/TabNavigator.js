@@ -6,7 +6,7 @@ import Ionicons from "react-native-vector-icons/Ionicons";
 import Feed from "../screens/Feed";
 import firebase from "firebase";
 import Trees from "../screens/Trees";
-import Veg from "../screens/CreateStory";
+import Veg from "../screens/Veg";
 
 const Tab = createMaterialBottomTabNavigator();
 
@@ -93,7 +93,7 @@ export default class BottomTabNavigator extends Component {
           component={this.renderFeed}
           options={{ unmountOnBlur: true}}
         />
-        <Tab.Screen
+        {/* <Tab.Screen
           name="veg"
           component={this.renderVeg}
           options={{ unmountOnBlur: true }}
@@ -103,7 +103,7 @@ export default class BottomTabNavigator extends Component {
           name="trees"
           component={this.renderTrees}
           options={{ unmountOnBlur: true }}
-        />
+        /> */}
 
       </Tab.Navigator>
     );

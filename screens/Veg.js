@@ -22,12 +22,13 @@ let customFonts = {
 
 let plants = require("./temp_plants.json");
 
-export default class Trees extends Component {
+export default class Veg extends Component {
   constructor(props) {
     super(props);
     this.state = {
       fontsLoaded: false,
       light_theme: true
+      
     };
   }
 
